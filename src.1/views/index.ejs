@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+  <body style="font-family:Century Gothic;">
+    <!-- <h2>Fast Food Rest API</h2>     -->
+    <div class="container" style="display: none;">
+      <h2>Person List</h2>
+      <p>Here you can add,edit,delete and update a person information</p>
+      <br>
+      <form class="form-inline">
+        <div class="form-group">
+          <input type="email" class="form-control" id="fname" placeholder="Firstname">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" id="mname" placeholder="Middlename">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" id="lname" placeholder="Lastname">
+        </div>
+        <button type="button" class="btn btn-default add-person">Submit</button>
+      </form>
+      <br><br>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Firstname</th>
+            <th>Middlename</th>
+            <th>Lastname</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody class="persons">
+        </tbody>
+      </table>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title modal-ve-title"></h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="email">Firstname</label>
+                <input type="text" class="form-control" id="evfname">
+              </div>
+              <div class="form-group">
+                <label for="email">Middlename</label>
+                <input type="text" class="form-control" id="evmname">
+              </div>
+              <div class="form-group">
+                <label for="email">Lastname</label>
+                <input type="text" class="form-control" id="evlname">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default ev-id" this-id="" this-status="" data-dismiss="modal">Save Changes</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <script>
+        var uri = "http://localhost:4001";
+        //getAllPerson();
+
+        function getAllPerson() {
+          $.ajax({
+            type : "GET",
+            url : uri+"/api/v1/person",
+            success : function (e) {
+              $('.persons').html("");
+              var data = JSON.parse(e), d = data.response;
+              for (var i = 0; i < d.length; i++) {
+                var markup = '          <tr>';
+                          markup +='  <td>'+d[i].ID+'</td>';
+                          markup +='  <td>'+d[i].fname+'</td>';
+                          markup +='  <td>'+d[i].mname+'</td>';
+                          markup +='  <td>'+d[i].lname+'</td>';
+                          markup +='  <td>';
+                          markup +='    <button type="button" class="btn btn-success btn-sm view" data-toggle="modal" data-target="#myModal" this-id="'+d[i].ID+'" this-fname="'+d[i].fname+'" this-mname="'+d[i].mname+'" this-lname="'+d[i].lname+'" >View</button>';
+                          markup +='    <button type="button" class="btn btn-info btn-sm edit" data-toggle="modal" data-target="#myModal" this-id="'+d[i].ID+'" this-fname="'+d[i].fname+'" this-mname="'+d[i].mname+'" this-lname="'+d[i].lname+'">Edit</button>';
+                          markup +='    <button type="button" class="btn btn-danger btn-sm delete" this-id="'+d[i].ID+'">Delete</button>';
+                          markup +='  </td>';
+                        markup +='  </tr>';
+                $('.persons').append(markup);
+              }
+            }
+          });
+        }
+
+
+        $(document).on('click', '.add-person', function (e) {
+            $.ajax({
+              type : "POST",
+              url : uri+"/api/v1/person/",
+              data : {
+                  fname : $("#fname").val(),
+                  mname : $("#mname").val(),
+                  lname : $("#lname").val(),
+              },
+              success : function (e) {
+                console.log(e);
+                getAllPerson();
+
+                $("#fname").val('');
+                $("#mname").val('');
+                $("#lname").val('');
+              }
+            });
+        });
+
+        $(document).on('click', '.delete', function (e) {
+            $.ajax({
+              type : "DELETE",
+              url : uri+"/api/v1/person/"+$(this).attr("this-id"),
+              success : function (e) {
+                getAllPerson();
+              }
+            });
+        });
+
+
+        $(document).on('click', '.view', function (e) {
+          $(".ev-id").attr({'this-id': $(this).attr('this-id')});
+          $(".ev-id").attr({'this-status': 'view'});
+          $("#evfname").val($(this).attr('this-fname'));
+          $("#evmname").val($(this).attr('this-mname'));
+          $("#evlname").val($(this).attr('this-lname'));
+          $('.modal-ve-title').html('Person Information');
+        })
+
+
+        $(document).on('click', '.edit', function (e) {
+          $(".ev-id").attr({'this-id': $(this).attr('this-id')});
+          $(".ev-id").attr({'this-status': 'edit'});
+          $("#evfname").val($(this).attr('this-fname'));
+          $("#evmname").val($(this).attr('this-mname'));
+          $("#evlname").val($(this).attr('this-lname'));
+          $('.modal-ve-title').html('Edit Information');
+        });
+
+        $(document).on('click', '.ev-id', function () {
+            var status = $(this).attr('this-status');
+            $.ajax({
+              type : "PUT",
+              url : uri+"/api/v1/person/",
+              data : {
+                  ID :  $(this).attr('this-id'),
+                  fname : $("#evfname").val(),
+                  mname : $("#evmname").val(),
+                  lname : $("#evlname").val(),
+              },
+              success : function (e) {
+                console.log(e);
+                getAllPerson();
+              }
+            });
+        });
+
+    </script>
+  </body>
+</html>

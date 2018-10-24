@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  
+
+  </head>
+  <body>
+    <div class="container">
+      <h2>Food Store</h2>
+      <p>Here you can add,edit,delete and update a food store information</p>
+      
+
+      <br>
+      <form class="form-inline">
+        <div class="form-group ui-widget">
+          <input type="email" class="form-control tags" id="store-name" placeholder="Store Name">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" id="profile-photo" placeholder="Profile Photo">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" id="cover-photo" placeholder="Cover Photo">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" id="location" placeholder="Location">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" id="latitude" placeholder="Latitude">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" id="longitude" placeholder="Longitude">
+        </div>
+        <button type="button" class="btn btn-success save-foodstore">Save</button>
+      </form>
+      <br><br>
+      <table class="table table-bordered foodstore-list">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Photo</th>
+            <th>Store Name</th>
+            <th>Location</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="foodstore-lists">
+            <% foodStores.forEach(function(data, key) { %>
+              <tr class="text-left">
+                <td><%= (key+1) %> </td>
+                <td><img src=" <%= data.profile_photo %> " width="50px"></td>
+                <td><%= data.foodstore_name %></td>
+                <td><%= data.location %></td>
+                <td><%= data.latitude %></td>
+                <td><%= data.longitude %></td>
+                <td>
+                  <button type="button" class="btn btn-success btn-xs view-info" data-toggle="modal" data-target="#view-info" cover-photo="<%= data.cover_photo %>" foodstore-name="<%= data.foodstore_name %>" profile-photo="<%= data.profile_photo %>" foodstore-id="<%= data.foodstore_id %> ">View Info</button>
+                  <button type="button" class="btn btn-info btn-xs view-menu" data-toggle="modal" data-target="#food-menu" foodstore-id="<%= data.foodstore_id %> ">View Menu</button>
+                  <button type="button" class="btn btn-warning btn-xs view-menu" data-toggle="modal" data-target="#food-menu" foodstore-id="<%= data.foodstore_id %> ">Add Personel</button>
+                </td>
+              </tr>
+            <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div id="view-info" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <!-- <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title modal-ve-title"></h4>
+          </div> -->
+          <div class="modal-body">
+            <div class="card">
+              <div class="card-header heading-footer foodstore-cover"></div>
+                <div class="card-block text-center">
+                  <img class="panel-profile-img rounded-circle foodstore-photo">
+                  <p class="author-title"><strong class="foodstore-name"></strong></p>
+                  <!-- <p>"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."</p> -->
+              </div>
+            </div>
+            <form>
+              <div class="form-group">
+                <label for="email">Address</label>
+                <input type="text" class="form-control" id="evfname">
+              </div>
+              <div class="form-group">
+                <label for="email">Location</label>
+                <input type="text" class="form-control" id="evmname">
+              </div>
+              <div class="form-group">
+                <label for="email">Location</label>
+                <input type="text" class="form-control" id="evlname">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default ev-id" this-id="" this-status="" data-dismiss="modal">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Food Menu -->
+    <div id="food-menu" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title modal-menu-title">Food Menu</h4>
+            </div>
+            <div class="modal-body">
+              <form class="form-inline">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="evfname" placeholder="Item Name">
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="evmname" placeholder="Item Price">
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="evmname" placeholder="Item Description">
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="evmname" placeholder="Photo URL">
+                </div>
+                <div class="form-group text-center">
+                  <button type="button" class="btn btn-success add-person">Save</button>                  
+                </div>
+              </form>
+              <br>
+              <hr/>
+              <table class="table table-bordered food-menu-list">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>Photo</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="food-menu-list">
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default ev-id" this-id="" this-status="" data-dismiss="modal">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      
+    <script>
+      
+      var APIUrl = location.origin+"/api/v1";
+
+      $(document).ready(function() {
+        $('.foodstore-list, .food-menu-list').DataTable({"info":           true});
+        foodstore.init(); // Call to initialize foodstore 
+      });
+
+      var foodstore = {
+        init : function() {
+          foodstore.eventListener();
+          foodstore.fetchFoodStore(); // Call to fetch all foodstore
+        },
+        eventListener : function() {
+          $(document).on('click', '.save-foodstore',function(e){
+            foodstore.saveFoodStore();
+          });
+
+          $(document).on('click', '.view-info', function(e) {
+            var foodstore_name = $(this).attr('foodstore-name'),
+                cover_photo = $(this).attr('cover-photo'),
+                profile_photo = $(this).attr('profile-photo');
+
+            $('.foodstore-name').text(foodstore_name);
+            $('.foodstore-cover').css({'background-image':'url("'+cover_photo+'")'});
+            $('.foodstore-photo').attr('src', profile_photo);
+          });
+
+          $(document).on('click', '.view-menu', function(e) {
+            foodstore.fetchFoodMenu($(this).attr('foodstore-id'));
+          });
+        },
+        saveFoodStore : function() {
+          var data = {
+              foodstore_name: $('#store-name').val(),
+              profilePhoto : $('#profile-photo').val(),
+              coverPhoto : $('#cover-photo').val(),
+              location : $('#location').val(),
+              latitude : $('#latitude').val(),
+              longitude : $('#longitude').val()
+            };
+          $.ajax({
+            type : "POST",
+            url : APIUrl+"/foodstore/add",
+            data : data,
+            success : function (res) { 
+              console.log(res);
+              foodstore.fetchFoodStore();
+            }
+          });          
+        },
+        fetchFoodStore : function() {
+          $('#foodstore-list').html("");
+          $.ajax({
+            type : "GET",
+            url : APIUrl+"/foodstore/list",
+            success : function (res) {
+              var data = res.response;
+              var inc = 0;
+              var ta = [];
+              for (var i = 0; i < data.length; i++) {
+                ta.push(data[i].foodstore_name);
+                inc +=1;
+                var markup = '<tr class="text-center">';
+                    markup +='  <td>'+inc+'</td>';
+                    markup +='  <td><img src="'+data[i].photo_url+'" width="50px"></td>';
+                    markup +='  <td>'+data[i].foodstore_name+'</td>';
+                    markup +='  <td>'+data[i].location+'</td>';
+                    markup +='  <td>'+data[i].latitude+'</td>';
+                    markup +='  <td>'+data[i].longitude+'</td>';
+                    markup +='  <td>';
+                    // markup +='    <button type="button" class="btn btn-success btn-sm view" data-toggle="modal" data-target="#myModal" this-id="'+data[i].ID+'" this-fname="'+d[i].fname+'" this-mname="'+d[i].mname+'" this-lname="'+d[i].lname+'" >View</button>';
+                    markup +='    <button type="button" class="btn btn-link btn-info btn-sm edit" data-toggle="modal" data-target="#myModal" >View Info</button>';
+                    markup +='    <button type="button" class="btn btn-link btn-sm add-menu" data-toggle="modal" data-target="#food-menu" this-id="'+data[i].foodstore_id+'">View Menu</button>';
+                    markup +='  </td>';
+                  markup +='  </tr>';
+                $('#foodstore-list').append(markup);
+              }
+              $( ".tags" ).autocomplete({
+                source: ta
+              });
+            }
+          });
+        },
+        fetchFoodMenu : function(foodstore_id) {
+          $('#food-menu-list').html("");
+          $.ajax({
+            type : "GET",
+            url : APIUrl+"/foodstore/menu/"+foodstore_id,
+            success : function (res) {
+              if(res.errorCode ==0) {
+                var data = res.response;
+                var inc = 0;
+                for (var i = 0; i < data.length; i++) {
+                  inc +=1;
+                  var markup = '<tr class="text-center">';
+                      markup +='  <td>'+inc+'</td>';
+                      markup +='  <td>'+data[i].item_name+'</td>';
+                      markup +='  <td>'+data[i].item_price+'</td>';
+                      markup +='  <td>'+data[i].item_description+'</td>';
+                      markup +='  <td><img src="'+data[i].photo_url+'" width="50px"></td>';
+                      markup +='  <td>';
+                      markup +='    <button type="button" class="btn btn-link btn-sm add-menu" data-toggle="modal">Edit</button>';
+                      markup +='  </td>';
+                    markup +='  </tr>';
+                  $('#food-menu-list').append(markup);
+                }
+              }
+            }
+          });
+        },        
+        deleteFoodStore : function(req) {
+          $.ajax({
+            type : "DELETE",
+            url : APIUrl+"/foodstore/delete/",
+            success : function (res) {
+              console.log(res)
+              if(res.errorCode == 0) {
+                foodstore.fetchFoodStore();
+              }
+            }
+          });
+        }
+      }
+
+
+    </script>
+  </body>
+</html>
